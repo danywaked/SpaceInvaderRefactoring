@@ -12,8 +12,8 @@
 class Wall
 {
 public:
-	Vector2 position{};
 	Rectangle rect{};
+	Vector2 position{};
 	void SetPosition(float x, float y) noexcept;
 	float GetX() const noexcept;
 	float GetY() const noexcept;
