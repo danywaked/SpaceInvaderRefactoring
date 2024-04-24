@@ -219,7 +219,7 @@ void Game::Render() noexcept
 		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 
-		player.Render(resources.shipTextures.at(player.activeTexture));
+		player.Render(resources.shipTextures[player.activeTexture]);
 		for(auto& p : Projectiles){
 				p.Render(resources.laserTexture);
 		}
@@ -351,7 +351,7 @@ void Game::AlienShooting()noexcept
 	}
 
 	Projectile newProjectile;
-	newProjectile.position = Aliens.at(randomAlienIndex).position;
+	newProjectile.position = Aliens[randomAlienIndex].position;
 	newProjectile.position.y += 40;
 	newProjectile.speed = -15;
 	newProjectile.enemyBullet = true;
@@ -394,7 +394,8 @@ void Game::SpawnAliens()noexcept
 
 bool Game::CheckNewHighScore()noexcept
 {
-	if (score > Leaderboard.at(4).score)
+	[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
+	if (score > Leaderboard[4].score)
 	{
 		return true;
 	}
@@ -409,6 +410,7 @@ void Game::InsertNewHighScore(std::string p_name) noexcept
 
 	for (size_t i = 0; i < Leaderboard.size(); i++)
 	{
+		[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
 		if (newData.score > Leaderboard[i].score)
 		{
 			Leaderboard.insert(Leaderboard.begin() + i, newData);
