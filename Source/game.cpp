@@ -218,7 +218,7 @@ void Game::Render() noexcept
 		background.Render();
 		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
-
+		[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
 		player.Render(resources.shipTextures[player.activeTexture]);
 		for(auto& p : Projectiles){
 				p.Render(resources.laserTexture);
@@ -351,6 +351,7 @@ void Game::AlienShooting()noexcept
 	}
 
 	Projectile newProjectile;
+	[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
 	newProjectile.position = Aliens[randomAlienIndex].position;
 	newProjectile.position.y += 40;
 	newProjectile.speed = -15;

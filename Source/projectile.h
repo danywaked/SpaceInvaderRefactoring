@@ -13,7 +13,7 @@ public:
 	Vector2 position = { 0,0 };
 	Vector2 lineStart = { 0, 0 };
 	Vector2 lineEnd = { 0, 0 };
-	Rectangle rect;
+	Rectangle rect{};
 	float GetWidth() const noexcept;
 	float GetHeight() const noexcept;
 	float GetX() const noexcept;
