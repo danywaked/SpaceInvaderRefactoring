@@ -20,7 +20,7 @@ public:
 	float player_base_height = 100;
 	float radius = 50;
 	int lives = 3;
-	void Render(Resource& texture) const noexcept;
+	void Render(const Resource& texture) const noexcept;
 	void Update() noexcept;
 
 };

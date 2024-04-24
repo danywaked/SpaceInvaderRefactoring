@@ -39,6 +39,6 @@ void Player::Movement() noexcept{
 	}
 }
 
-void Player::Render(Resource& texture) const noexcept{
-	DrawTexture(texture.texture, x_pos, (GetScreenHeight()) - player_base_height, WHITE);
+void Player::Render(const Resource& texture) const noexcept{
+	DrawTextureV(texture.texture, { x_pos, GetScreenHeight() - player_base_height }, WHITE);
 }

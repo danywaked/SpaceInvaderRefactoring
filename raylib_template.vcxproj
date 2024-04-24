@@ -183,7 +183,7 @@
     <ClInclude Include="Source\projectile.h" />
     <ClInclude Include="Source\Resources.h" />
     <ClInclude Include="Source\wall.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="Source\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

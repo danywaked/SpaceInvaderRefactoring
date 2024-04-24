@@ -17,6 +17,15 @@ bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) noexcept // U
 	return false;
 }
 
+void Game::Run()
+{
+	while (!game.ShouldClose())
+	{
+		Update();
+		Render();
+	}
+}
+
 void Game::Start()noexcept
 {
 	SpawnWalls();
@@ -195,6 +204,8 @@ void Game::Update()
 
 void Game::Render() noexcept
 {
+	BeginDrawing();
+	ClearBackground(BLACK);
 	switch (gameState)
 	{
 	case State::STARTSCREEN:
@@ -281,6 +292,7 @@ void Game::Render() noexcept
 		//SHOULD NOT HAPPEN
 		break;
 	}
+	EndDrawing();
 }
 
 void Game::CheckForCollisions() noexcept
@@ -350,7 +362,7 @@ void Game::AlienShooting()noexcept
 void Game::EraseInactiveEntities()noexcept
 {
 	std::erase_if(Aliens, [](const auto& alien) {return !alien.active; });
-	std::erase_if(Walls, [](const auto& wall) {return !wall.active; });
+	std::erase_if(Walls, [](const auto& wall) {return !wall.active(); });
 	std::erase_if(Projectiles, [](const auto& projectile) {return !projectile.active; });
 }
 

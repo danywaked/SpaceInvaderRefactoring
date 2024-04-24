@@ -37,5 +37,5 @@ void Projectile::Update() noexcept{
 }
 
 void Projectile::Render(const Resource& texture) const noexcept{
-	DrawTexture(texture.texture, position.x, position.y, WHITE);
+	DrawTextureV(texture.texture, position, WHITE);
 }

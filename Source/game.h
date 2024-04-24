@@ -5,6 +5,7 @@
 #include "raylib.h"
 #pragma warning(pop)
 
+#include "Window.h"
 #include "player.h"
 #include "projectile.h"
 #include "wall.h"
@@ -26,7 +27,7 @@ struct PlayerData
 	std::string name;
 	int score = 0;
 	void render(int pos) const noexcept {
-		int yoffset = pos * 40;
+		const int yoffset = pos * 40;
 		DrawText(name.c_str(), 50, 140 + yoffset, 40, YELLOW);
 		DrawText(TextFormat("%i", score), 350, 140 + yoffset, 40, YELLOW);
 	}
@@ -34,7 +35,9 @@ struct PlayerData
 
 struct Game
 {
-	State gameState = {};
+	Window game{ screenWidth,screenHeight,"Space Invaders 2.0" };
+
+	State gameState = State::STARTSCREEN;
 	int score;
 	int wallCount = 5;
 
@@ -48,6 +51,8 @@ struct Game
 	int formationY = 50;
 
 	bool newHighScore = false;
+
+	void Run();
 
 	void Start()noexcept;
 	void End()noexcept;

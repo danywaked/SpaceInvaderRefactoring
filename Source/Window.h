@@ -9,17 +9,23 @@ constexpr int screenWidth = 1920;
 constexpr int screenHeight = 1080;
 
 struct Window {
-    Window(int screenWidth, int screenHeight, const char* title)
+    Window(int width, int height, const char* title) noexcept
     {
-        InitWindow(screenWidth, screenHeight, title);
+        InitWindow(width, height, title);
         SetTargetFPS(60);
     }
-   bool ShouldClose() const
+   bool ShouldClose() const noexcept
    {
        return WindowShouldClose();
    }
-   ~Window()
+   ~Window() noexcept
    {
        CloseWindow();
    }
+
+   Window(const Window& other) = delete;
+   Window& operator=(const Window& other) = delete;
+   Window(Window&& other) = delete;
+   Window & operator=(Window && other) = delete;
+
 };

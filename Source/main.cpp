@@ -11,20 +11,8 @@
 int main(void)
 {    
     try {
-        Game game(resolution, title);
-        game.run();
-        //put this stuff in .run()
-        //Game game = { State::STARTSCREEN };
-        //while (!WindowShouldClose())    // Detect window close button or ESC key
-        //{
-        //    game.Update();
-
-        //    BeginDrawing();
-        //    ClearBackground(BLACK);
-        //    game.Render();
-        //    EndDrawing();
-        //}
-        //CloseWindow();
+        Game game;
+        game.Run();
     } 
     catch(const std::runtime_error& e){
         std::cerr << "Runtime error " << e.what() << std::endl;
