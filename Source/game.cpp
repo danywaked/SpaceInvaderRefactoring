@@ -48,7 +48,8 @@ void Game::Start()noexcept
 void Game::End() noexcept
 {
 	//SAVE SCORE AND UPDATE SCOREBOARD
-	Projectiles.clear();
+	PlayerProjectiles.clear();
+	EnemyProjectiles.clear();
 	Walls.clear();
 	Aliens.clear();
 	newHighScore = CheckNewHighScore();
@@ -103,14 +104,18 @@ void Game::Update()
 		background.Update(offset / 15.0f);
 
 		//UPDATE PROJECTILE
-		for (auto& p : Projectiles) {
-			p.Update();
+		for (auto& enemyProjectiles : EnemyProjectiles) {
+			enemyProjectiles.Update();
+		}
+		for (auto& playerProjectiles : PlayerProjectiles) {
+			playerProjectiles.Update();
 		}
 		//UPDATE WALLS
 		for (auto& w : Walls) {
 			w.Update();
 		}
-		CheckForCollisions();
+		CheckForAlienCollisions();
+		CheckForPlayerCollisions()
 		if (IsKeyPressed(KEY_SPACE))
 		{
 			SpawnPlayerProjectile();
@@ -295,39 +300,37 @@ void Game::Render() noexcept
 	EndDrawing();
 }
 
-void Game::CheckForCollisions() noexcept
+void Game::CheckForPlayerCollisions() noexcept
 {
-	for (auto& p : Projectiles) {
-		if (!p.enemyBullet)
-		{
-			for (auto& a : Aliens) {
-				//if (CheckCollision(a.position, a.radius, p.lineStart, p.lineEnd))
-				if(CheckCollisionRecs(p.rect,a.rect))
-				{
-					// Set them as inactive, will be killed later
-					p.active = false;
-					a.active = false;
-					score += 100;
-				}
-			}
-		}
-		else //ENEMY PROJECTILES HERE
-		{
-			//if (CheckCollision({ player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, p.lineStart, p.lineEnd))
-			if(CheckCollisionRecs(player.rect,p.rect))
-			{
-				p.active = false;
-				player.lives -= 1;
-			}
-		}
-		for (auto& w : Walls) {
-			//if (CheckCollision(w.position, w.radius, p.lineStart, p.lineEnd))
-			if(CheckCollisionRecs(w.rect,p.rect))
+	for (auto& playerProjectile : PlayerProjectiles) {
+
+		for (auto& alien : Aliens) {
+			if (CheckCollisionRecs(playerProjectile.rect, alien.rect))
 			{
 				// Set them as inactive, will be killed later
-				p.active = false;
+				playerProjectile.active = false;
+				alien.active = false;
+				score += 100;
+			}
+		}
+	}
+}
+
+void Game::CheckForAlienCollisions() noexcept
+{
+	for (auto& enemyProjectile : EnemyProjectiles) {
+		for (auto& w : Walls) {
+			if (CheckCollisionRecs(w.rect, enemyProjectile.rect))
+			{
+				// Set them as inactive, will be killed later
+				enemyProjectile.active = false;
 				w.health -= 1;
 			}
+		}
+		if (CheckCollisionRecs(player.rect, enemyProjectile.rect))
+		{
+			enemyProjectile.active = false;
+			player.lives -= 1;
 		}
 	}
 }
@@ -335,11 +338,9 @@ void Game::CheckForCollisions() noexcept
 void Game::SpawnPlayerProjectile()noexcept
 {
 	const float window_height = static_cast<float>(GetScreenHeight());
-	Projectile newProjectile;
-	newProjectile.position.x = player.x_pos;
-	newProjectile.position.y = window_height - 130;
-	newProjectile.enemyBullet = false;
-	Projectiles.push_back(newProjectile);
+	Vector2 pos{ player.x_pos,  window_height - 130 };
+	int speed = 15;
+	PlayerProjectiles.push_back(Projectile(pos,speed));
 }
 
 void Game::AlienShooting()noexcept
@@ -350,21 +351,20 @@ void Game::AlienShooting()noexcept
 		randomAlienIndex = rand() % Aliens.size();
 	}
 
-	Projectile newProjectile;
 	[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
-	newProjectile.position = Aliens[randomAlienIndex].position;
-	newProjectile.position.y += 40;
-	newProjectile.speed = -15;
-	newProjectile.enemyBullet = true;
-	Projectiles.push_back(newProjectile);
+	Vector2 pos{ Aliens[randomAlienIndex].position };
+	pos.y += 40;
+	int speed = -15;
+	EnemyProjectiles.push_back(Projectile(pos,speed));
 	shootTimer = 0;
 }
 
 void Game::EraseInactiveEntities()noexcept
-{
+{//TODO: make a function cz this is repetitive code.
 	std::erase_if(Aliens, [](const auto& alien) {return !alien.active; });
 	std::erase_if(Walls, [](const auto& wall) {return !wall.active(); });
-	std::erase_if(Projectiles, [](const auto& projectile) {return !projectile.active; });
+	std::erase_if(EnemyProjectiles, [](const auto& projectile) {return !projectile.active; });
+	std::erase_if(PlayerProjectiles, [](const auto& projectile) {return !projectile.active; });
 }
 
 void Game::SpawnWalls() noexcept

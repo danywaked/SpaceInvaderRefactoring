@@ -10,9 +10,7 @@
 class Projectile
 {
 public:
-	Vector2 position = { 0,0 };
-	Vector2 lineStart = { 0, 0 };
-	Vector2 lineEnd = { 0, 0 };
+	Projectile(Vector2 position, int p_speed)noexcept;
 	Rectangle rect{};
 	float GetWidth() const noexcept;
 	float GetHeight() const noexcept;
@@ -20,7 +18,6 @@ public:
 	float GetY() const noexcept;
 	bool active = true;
 	int speed = 15;
-	bool enemyBullet = false;
 	void Update() noexcept;
 	void Render(const Resource& texture) const noexcept;
 };
