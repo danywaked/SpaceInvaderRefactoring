@@ -12,9 +12,8 @@
 class Wall
 {
 public:
+	Wall(Vector2 position) noexcept;
 	Rectangle rect{};
-	Vector2 position{};
-	void SetPosition(float x, float y) noexcept;
 	float GetX() const noexcept;
 	float GetY() const noexcept;
 	float GetWidth() const noexcept;
@@ -26,5 +25,4 @@ public:
 	}
 	
 	void Render(const Resource& texture) const noexcept;
-	void Update() noexcept;
 };

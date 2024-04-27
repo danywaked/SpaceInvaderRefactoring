@@ -14,11 +14,12 @@ class Alien
 	bool moveRight = true;
 
 public:
-	Vector2 position = { 0, 0 };
+	Alien(Vector2 position) noexcept;
 	Rectangle rect{};
+	float offset = 50;
+	float alienWidth = 100;
+	float alienHeight = 100;
 	bool active = true;
-	float radius = 30;
-
 	void Update() noexcept;
 	void Render(const Resource& texture) const noexcept;
 };

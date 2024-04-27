@@ -29,12 +29,6 @@ void Game::Run()
 void Game::Start()noexcept
 {
 	SpawnWalls();
-	
-	//creating player
-	[[gsl::suppress(con.4)]]
-	Player newPlayer;
-	player = newPlayer;
-
 	SpawnAliens();
 	
 	Background newBackground;
@@ -82,7 +76,7 @@ void Game::Update()
 		//Update Aliens and Check if they are past player
 	for (auto& a : Aliens) {
 		a.Update(); 
-		if (a.position.y > GetScreenHeight() - player.player_base_height)
+		if (a.rect.y > GetScreenHeight() - player.playerHeight)
 		{
 			End();
 		}
@@ -98,8 +92,8 @@ void Game::Update()
 		}
 
 		// Update background with offset
-		playerPos = { player.x_pos, player.player_base_height };
-		cornerPos = { 0.0f, player.player_base_height };
+		playerPos = { player.rect.x, player.playerHeight };
+		cornerPos = { 0.0f, player.playerHeight };
 		offset = lineLength(playerPos, cornerPos) * -1;
 		background.Update(offset / 15.0f);
 
@@ -110,12 +104,8 @@ void Game::Update()
 		for (auto& playerProjectiles : PlayerProjectiles) {
 			playerProjectiles.Update();
 		}
-		//UPDATE WALLS
-		for (auto& w : Walls) {
-			w.Update();
-		}
 		CheckForAlienCollisions();
-		CheckForPlayerCollisions()
+		CheckForPlayerCollisions();
 		if (IsKeyPressed(KEY_SPACE))
 		{
 			SpawnPlayerProjectile();
@@ -225,8 +215,11 @@ void Game::Render() noexcept
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 		[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
 		player.Render(resources.shipTextures[player.activeTexture]);
-		for(auto& p : Projectiles){
-				p.Render(resources.laserTexture);
+		for(auto& enemyProjectiles : EnemyProjectiles){
+			enemyProjectiles.Render(resources.laserTexture);
+		}
+		for(auto& playerProjectiles : PlayerProjectiles){
+			playerProjectiles.Render(resources.laserTexture);
 		}
 		for (auto& w : Walls) {
 			w.Render(resources.barrierTexture);
@@ -303,11 +296,10 @@ void Game::Render() noexcept
 void Game::CheckForPlayerCollisions() noexcept
 {
 	for (auto& playerProjectile : PlayerProjectiles) {
-
+		CheckForWallCollisions(playerProjectile);
 		for (auto& alien : Aliens) {
 			if (CheckCollisionRecs(playerProjectile.rect, alien.rect))
 			{
-				// Set them as inactive, will be killed later
 				playerProjectile.active = false;
 				alien.active = false;
 				score += 100;
@@ -316,17 +308,21 @@ void Game::CheckForPlayerCollisions() noexcept
 	}
 }
 
+void Game::CheckForWallCollisions(Projectile& projectile) noexcept
+{
+	for (auto& w : Walls) {
+		if (CheckCollisionRecs(w.rect, projectile.rect))
+		{
+			projectile.active = false;
+			w.health -= 1;
+		}
+	}
+}
+
 void Game::CheckForAlienCollisions() noexcept
 {
 	for (auto& enemyProjectile : EnemyProjectiles) {
-		for (auto& w : Walls) {
-			if (CheckCollisionRecs(w.rect, enemyProjectile.rect))
-			{
-				// Set them as inactive, will be killed later
-				enemyProjectile.active = false;
-				w.health -= 1;
-			}
-		}
+		CheckForWallCollisions(enemyProjectile);
 		if (CheckCollisionRecs(player.rect, enemyProjectile.rect))
 		{
 			enemyProjectile.active = false;
@@ -335,15 +331,15 @@ void Game::CheckForAlienCollisions() noexcept
 	}
 }
 
-void Game::SpawnPlayerProjectile()noexcept
+void Game::SpawnPlayerProjectile()
 {
 	const float window_height = static_cast<float>(GetScreenHeight());
-	Vector2 pos{ player.x_pos,  window_height - 130 };
-	int speed = 15;
+	Vector2 pos{ player.rect.x,  window_height - 130 };
+	constexpr int speed = 15;
 	PlayerProjectiles.push_back(Projectile(pos,speed));
 }
 
-void Game::AlienShooting()noexcept
+void Game::AlienShooting()
 {
 	int randomAlienIndex = 0;
 	if (Aliens.size() > 1)
@@ -352,9 +348,9 @@ void Game::AlienShooting()noexcept
 	}
 
 	[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
-	Vector2 pos{ Aliens[randomAlienIndex].position };
+	Vector2 pos{ Aliens[randomAlienIndex].rect.x, Aliens[randomAlienIndex].rect.y};
 	pos.y += 40;
-	int speed = -15;
+	constexpr int speed = -15;
 	EnemyProjectiles.push_back(Projectile(pos,speed));
 	shootTimer = 0;
 }
@@ -367,28 +363,26 @@ void Game::EraseInactiveEntities()noexcept
 	std::erase_if(PlayerProjectiles, [](const auto& projectile) {return !projectile.active; });
 }
 
-void Game::SpawnWalls() noexcept
+void Game::SpawnWalls() 
 {
 	const float window_width = static_cast<float>(GetScreenWidth());
 	const float window_height = static_cast<float>(GetScreenHeight());
 	const float wall_distance = static_cast<float>(window_width / (wallCount + 1));
+	constexpr float yOffset = 250.0f;
 	for (size_t i = 0; i < wallCount; i++)
 	{
-		Wall newWalls;
-		newWalls.SetPosition(wall_distance * (i + 1), window_height - 250);
-		Walls.push_back(newWalls);
+		Vector2 pos{ wall_distance * (i + 1), window_height - yOffset };
+		Walls.push_back(Wall(pos));
 	}
 }
 
-void Game::SpawnAliens()noexcept
+void Game::SpawnAliens()
 {
 	for (int row = 0; row < formationHeight; row++) {
 		for (int col = 0; col < formationWidth; col++) {
-			Alien newAlien = Alien();
-			newAlien.active = true;
-			newAlien.position.x = static_cast<float>(formationX + 450.0f + (col * alienSpacing));
-			newAlien.position.y = static_cast<float>(formationY + (row * alienSpacing));
-			Aliens.push_back(newAlien);
+			float x = static_cast<float>(formationX + 450.0f + (col * alienSpacing));
+			float y = static_cast<float>(formationY + (row * alienSpacing));
+			Aliens.push_back(Alien({x,y}));
 		}
 	}
 }

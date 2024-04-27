@@ -14,11 +14,11 @@ class Player
 
 	void Movement() noexcept;
 public:
+	Player(float posX) noexcept;
 	Rectangle rect{};
 	int activeTexture = 0;
-	float x_pos = static_cast<float>(GetScreenWidth() / 2.0f);
-	float player_base_height = 100;
-	float radius = 50;
+	float playerWidth = 100;
+	float playerHeight = 100;
 	int lives = 3;
 	void Render(const Resource& texture) const noexcept;
 	void Update() noexcept;

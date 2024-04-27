@@ -39,7 +39,7 @@ struct Game
 
 	State gameState = State::STARTSCREEN;
 	int score;
-	int wallCount = 5;
+	const int wallCount = 5;
 
 	//for Aliens shooting
 	float shootTimer = 0;
@@ -61,18 +61,19 @@ struct Game
 	void Render()noexcept;
 
 	void CheckForPlayerCollisions() noexcept;
+	void CheckForWallCollisions(Projectile& projectile) noexcept;
 	void CheckForAlienCollisions() noexcept;
-	void SpawnPlayerProjectile()noexcept;
-	void AlienShooting()noexcept;
+	void SpawnPlayerProjectile();
+	void AlienShooting();
 	void EraseInactiveEntities()noexcept;
-	void SpawnWalls()noexcept;
-	void SpawnAliens()noexcept;
+	void SpawnWalls();
+	void SpawnAliens();
 	bool CheckNewHighScore()noexcept;
 	void InsertNewHighScore(std::string p_name)noexcept;
 
 	Background background;
 	ResourceManager resources;
-	Player player;
+	Player player{ static_cast<float>(GetScreenWidth() / 2.0f) };
 
 	std::vector<Projectile> EnemyProjectiles;
 	std::vector<Projectile> PlayerProjectiles;

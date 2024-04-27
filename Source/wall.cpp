@@ -1,11 +1,14 @@
 #include "wall.h"
 
 
-void Wall::SetPosition(float x, float y) noexcept
+Wall::Wall(Vector2 position) noexcept
 {
-	rect.x = x;
-	rect.y = y;
+	rect.x = position.x;
+	rect.y = position.y;
+	rect.width = 170;
+	rect.height = 76;
 }
+
 float Wall::GetX() const noexcept
 {
 	return rect.x;
@@ -27,13 +30,8 @@ float Wall::GetHeight() const noexcept
 }
 
 void Wall::Render(const Resource& texture) const noexcept {
-	DrawTextureV(texture.texture, { GetX() - 100.0f, GetY() - 100.0f }, WHITE);
-	DrawText(TextFormat("%i", health), static_cast<int> (position.x) - 21, static_cast<int>(position.y) + 10, 40, RED);
-}
-
-void Wall::Update() noexcept {
-	//if (health < 1)
-	//{
-	//	active = false;
-	//}
+	const auto offsetX = rect.width / 2;
+	const auto offsetY = rect.height / 2;
+	DrawTextureV(texture.texture, { GetX() - offsetX, GetY() - offsetY }, WHITE);
+	DrawText(TextFormat("%i", health), static_cast<int> (rect.x) - 21, static_cast<int>(rect.y) + 10, 40, RED);
 }

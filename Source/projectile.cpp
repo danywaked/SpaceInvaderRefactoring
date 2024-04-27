@@ -3,8 +3,8 @@
 
 Projectile::Projectile(Vector2 position, int p_speed) noexcept
 {
-	position.x = rect.x;
-	position.y = rect.y;
+	rect.x = position.x;
+	rect.y = position.y;
 	rect.width = 9.0f;
 	rect.height = 47.0f;
 	speed = p_speed;
@@ -33,12 +33,6 @@ float Projectile::GetY() const noexcept
 void Projectile::Update() noexcept{
 	rect.y -= speed;
 
-	//// UPDATE LINE POSITION
-	//lineStart.y = position.y - 15;
-	//lineEnd.y = position.y + 15;
-	//lineStart.x = position.x;
-	//lineEnd.x = position.x;
-
 	if (rect.y < 0 || rect.y > GetScreenHeight())
 	{
 		active = false;
@@ -46,5 +40,7 @@ void Projectile::Update() noexcept{
 }
 
 void Projectile::Render(const Resource& texture) const noexcept {
-	DrawTextureV(texture.texture,{ rect.x, rect.y}, WHITE);
+	const auto offsetX = rect.width / 2;
+	const auto offsetY = rect.height / 2;
+	DrawTextureV(texture.texture,{ rect.x - offsetX, rect.y - offsetY }, WHITE);
 }

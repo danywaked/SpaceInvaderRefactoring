@@ -1,5 +1,14 @@
 #include "player.h"
 
+
+Player::Player(float posX) noexcept
+{
+	rect.width = playerWidth;
+	rect.height = playerHeight;
+	rect.x = posX;
+	rect.y = GetScreenHeight() - rect.height;
+}
+
 void Player::Update() noexcept{
 	Movement();
 
@@ -28,17 +37,20 @@ void Player::Movement() noexcept{
 	{
 		direction++;
 	}
-	x_pos += speed * direction;
-	if (x_pos < 0 + radius)
+	rect.x += speed * direction;
+	if (rect.x < 0 + rect.width)
 	{
-		x_pos = 0 + radius;
+		rect.x = 0 + rect.width;
 	}
-	else if (x_pos > GetScreenWidth() - radius)
+	else if (rect.x > GetScreenWidth() - rect.width)
 	{
-		x_pos = GetScreenWidth() - radius;
+		rect.x = GetScreenWidth() - rect.width;
 	}
 }
 
+
 void Player::Render(const Resource& texture) const noexcept{
-	DrawTextureV(texture.texture, { x_pos, GetScreenHeight() - player_base_height }, WHITE);
+	const auto offsetX = rect.width / 2;
+	const auto offsetY = rect.height / 2;
+	DrawTextureV(texture.texture, { rect.x - offsetX,rect.y - offsetY }, WHITE);
 }
