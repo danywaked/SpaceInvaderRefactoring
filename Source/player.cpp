@@ -28,19 +28,17 @@ void Player::Update() noexcept{
 }
 
 void Player::Movement() noexcept{
-	direction = 0;
 	if (IsKeyDown(KEY_LEFT))
 	{
-		direction--;
+		rect.x -= speed;
 	}
 	if (IsKeyDown(KEY_RIGHT))
 	{
-		direction++;
+		rect.x += speed;
 	}
-	rect.x += speed * direction;
 	if (rect.x < 0 + rect.width)
 	{
-		rect.x = 0 + rect.width;
+		rect.x = rect.width;
 	}
 	else if (rect.x > GetScreenWidth() - rect.width)
 	{

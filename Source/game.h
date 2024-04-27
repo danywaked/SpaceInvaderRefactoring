@@ -54,7 +54,7 @@ struct Game
 
 	void Run();
 
-	void Start()noexcept;
+	void Start();
 	void End()noexcept;
 	void Continue()noexcept;
 	void Update();

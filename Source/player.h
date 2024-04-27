@@ -9,7 +9,6 @@
 class Player
 {
 	float speed = 7;
-	int direction = 0;
 	float timer = 0;
 
 	void Movement() noexcept;

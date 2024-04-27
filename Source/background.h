@@ -10,6 +10,7 @@
 
 struct Star
 {
+	Star(Vector2 position);
 	Vector2 initPosition = { 0, 0 };
 	Vector2 position = { 0, 0 };
 	Color color = GRAY;

@@ -1,6 +1,6 @@
 #include "game.h"
 
-// MATH FUNCTIONS
+
 float lineLength(Vector2 A, Vector2 B)noexcept //Uses pythagoras to calculate the length of a line
 {
 	const float length = sqrtf(pow(B.x - A.x, 2.0f) + pow(B.y - A.y, 2.0f));
@@ -26,7 +26,7 @@ void Game::Run()
 	}
 }
 
-void Game::Start()noexcept
+void Game::Start()
 {
 	SpawnWalls();
 	SpawnAliens();
@@ -122,7 +122,6 @@ void Game::Update()
 		break;
 	case State::ENDSCREEN:
 	
-		//Exit endscreen
 		if (IsKeyReleased(KEY_ENTER) && !newHighScore)
 		{
 			Continue();
@@ -204,7 +203,6 @@ void Game::Render() noexcept
 	switch (gameState)
 	{
 	case State::STARTSCREEN:
-		//Code
 		DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
 		DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
 		break;
@@ -287,7 +285,6 @@ void Game::Render() noexcept
 		}
 		break;
 	default:
-		//SHOULD NOT HAPPEN
 		break;
 	}
 	EndDrawing();
