@@ -4,14 +4,15 @@
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
 #pragma warning(pop)
+#include <string_view>
 
 constexpr int screenWidth = 1920;
 constexpr int screenHeight = 1080;
 
 struct Window {
-    Window(int width, int height, const char* title) noexcept
+    Window(int width, int height, std::string_view title) noexcept
     {
-        InitWindow(width, height, title);
+        InitWindow(width, height, title.data());
         SetTargetFPS(60);
     }
    bool ShouldClose() const noexcept

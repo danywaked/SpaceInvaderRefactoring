@@ -3,10 +3,10 @@
 
 Projectile::Projectile(Vector2 position, int p_speed) noexcept
 {
-	rect.x = position.x;
-	rect.y = position.y;
 	rect.width = 9.0f;
 	rect.height = 47.0f;
+	rect.x = position.x ;
+	rect.y = position.y;
 	speed = p_speed;
 }
 
@@ -40,7 +40,5 @@ void Projectile::Update() noexcept{
 }
 
 void Projectile::Render(const Resource& texture) const noexcept {
-	const auto offsetX = rect.width / 2;
-	const auto offsetY = rect.height / 2;
-	DrawTextureV(texture.texture,{ rect.x - offsetX, rect.y - offsetY }, WHITE);
+	DrawTextureV(texture.texture,{ rect.x, rect.y}, WHITE);
 }

@@ -5,7 +5,6 @@
 #include "raylib.h"
 #pragma warning(pop)
 
-#include "raylib.h"
 #include "Resources.h"
 
 
@@ -14,13 +13,9 @@ class Wall
 public:
 	Wall(Vector2 position) noexcept;
 	Rectangle rect{};
-	float GetX() const noexcept;
-	float GetY() const noexcept;
-	float GetWidth() const noexcept;
-	float GetHeight() const noexcept;
 	int health = 50;
 
-	bool active() const noexcept {
+	bool isActive() const noexcept {
 		return health > 0;
 	}
 	

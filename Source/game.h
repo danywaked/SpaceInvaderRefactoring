@@ -15,6 +15,12 @@
 #include "Resources.h"
 #include <string>
 
+
+
+static float GetScreenWidthF() noexcept {
+	return static_cast<float>(GetScreenWidth());
+}
+
 enum struct State
 {
 	STARTSCREEN,
@@ -39,16 +45,16 @@ struct Game
 
 	State gameState = State::STARTSCREEN;
 	int score;
-	const int wallCount = 5;
+	static constexpr int wallCount = 5;
 
 	//for Aliens shooting
 	float shootTimer = 0;
-
-	int formationWidth = 8;
-	int formationHeight = 5;
-	int alienSpacing = 80;
-	int formationX = 100;
-	int formationY = 50;
+	static constexpr int starAmount = 600;
+	static constexpr int formationWidth = 8;
+	static constexpr int formationHeight = 5;
+	static constexpr int alienSpacing = 80;
+	static constexpr int formationX = 100;
+	static constexpr int formationY = 50;
 
 	bool newHighScore = false;
 
@@ -61,7 +67,7 @@ struct Game
 	void Render()noexcept;
 
 	void CheckForPlayerCollisions() noexcept;
-	void CheckForWallCollisions(Projectile& projectile) noexcept;
+	bool CheckForWallCollisions(Projectile& projectile) noexcept;
 	void CheckForAlienCollisions() noexcept;
 	void SpawnPlayerProjectile();
 	void AlienShooting();
@@ -71,9 +77,9 @@ struct Game
 	bool CheckNewHighScore()noexcept;
 	void InsertNewHighScore(std::string p_name)noexcept;
 
-	Background background;
+	Background background = Background(starAmount);
 	ResourceManager resources;
-	Player player{ static_cast<float>(GetScreenWidth() / 2.0f) };
+	Player player{ GetScreenWidthF() / 2.0f };
 
 	std::vector<Projectile> EnemyProjectiles;
 	std::vector<Projectile> PlayerProjectiles;
@@ -81,15 +87,4 @@ struct Game
 	std::vector<Alien> Aliens;
 	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
 
-	Vector2 playerPos;
-	Vector2 alienPos; 
-	Vector2 cornerPos;
-	float offset;
-
-	//TEXTBOX ENTER
-	char name[9 + 1] = "\0";      //One extra space required for null terminator char '\0'
-	int letterCount = 0;
-	Rectangle textBox = { 600, 500, 225, 50 };
-	bool mouseOnText = false;
-	int framesCounter = 0;
 };

@@ -20,4 +20,5 @@ public:
 	int speed = 15;
 	void Update() noexcept;
 	void Render(const Resource& texture) const noexcept;
+	bool isActive() const noexcept { return active; }
 };

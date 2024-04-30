@@ -9,29 +9,10 @@ Wall::Wall(Vector2 position) noexcept
 	rect.height = 76;
 }
 
-float Wall::GetX() const noexcept
-{
-	return rect.x;
-}
-
-float Wall::GetY() const noexcept
-{
-	return rect.y;
-}
-
-float Wall::GetWidth() const noexcept
-{
-	return rect.width;
-}
-
-float Wall::GetHeight() const noexcept
-{
-	return rect.height;
-}
-
 void Wall::Render(const Resource& texture) const noexcept {
-	const auto offsetX = rect.width / 2;
-	const auto offsetY = rect.height / 2;
-	DrawTextureV(texture.texture, { GetX() - offsetX, GetY() - offsetY }, WHITE);
-	DrawText(TextFormat("%i", health), static_cast<int> (rect.x) - 21, static_cast<int>(rect.y) + 10, 40, RED);
+	DrawTextureV(texture.texture, { rect.x, rect.y }, WHITE);
+	constexpr int textSize = 40;
+	const int textPosX = static_cast<int> (rect.x + rect.width / 3);
+	const int textPosY = static_cast<int>(rect.y + rect.height / 2);
+	DrawText(TextFormat("%i", health), textPosX, textPosY, textSize, RED);
 }

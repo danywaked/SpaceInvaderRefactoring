@@ -1,21 +1,25 @@
 #include "alien.h"
 
-Alien::Alien(Vector2 position) noexcept
-{
+Alien::Alien(Vector2 position) noexcept{
 	rect.x = position.x;
 	rect.y = position.y;
-	rect.width = alienWidth;
-	rect.height = alienHeight;
 }
 
 void Alien::Update() noexcept {
-	const int window_width = GetScreenWidth();
+	const float window_width = static_cast<float>(GetScreenWidth());
+
+	//TODO: 
+	//add speed
+	//isAtWall()
+		//speed *= -1;
+		//position.y += 50;
+
 
 	if (moveRight)
 	{
 		rect.x += speed;
 
-		if (rect.x >= window_width)
+		if (rect.x >= window_width - rect.width)
 		{
 			moveRight = false;
 			rect.y += 50;
@@ -34,5 +38,5 @@ void Alien::Update() noexcept {
 }
 
 void Alien::Render(const Resource& texture) const noexcept {
-	DrawTextureV(texture.texture, { rect.x - offset, rect.y - offset }, WHITE);
+	DrawTextureV(texture.texture, { rect.x , rect.y }, WHITE);
 }

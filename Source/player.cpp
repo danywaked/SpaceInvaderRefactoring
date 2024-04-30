@@ -9,6 +9,21 @@ Player::Player(float posX) noexcept
 	rect.y = GetScreenHeight() - rect.height;
 }
 
+float Player::GetWidth() const noexcept
+{
+	return rect.width;
+}
+
+float Player::GetHeight() const noexcept
+{
+	return rect.height;
+}
+
+float Player::GetX() const noexcept
+{
+	return rect.x;
+}
+
 void Player::Update() noexcept{
 	Movement();
 
@@ -48,7 +63,5 @@ void Player::Movement() noexcept{
 
 
 void Player::Render(const Resource& texture) const noexcept{
-	const auto offsetX = rect.width / 2;
-	const auto offsetY = rect.height / 2;
-	DrawTextureV(texture.texture, { rect.x - offsetX,rect.y - offsetY }, WHITE);
+	DrawTextureV(texture.texture, { rect.x ,rect.y }, WHITE);
 }

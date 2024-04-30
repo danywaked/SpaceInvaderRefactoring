@@ -5,26 +5,21 @@
 #include "raylib.h"
 #pragma warning(pop)
 
-#include "raylib.h"
 #include <vector>
 
 struct Star
 {
-	Star(Vector2 position);
-	Vector2 initPosition = { 0, 0 };
+	Star(float x, float y) noexcept;
 	Vector2 position = { 0, 0 };
-	Color color = GRAY;
 	float size = 0;
-	void Update(float starOffset)noexcept;
-	void Render()noexcept;
+	static constexpr Color color = SKYBLUE;
+	void Render() const noexcept;
 };
 
 struct Background
 {
-	std::vector<Star> Stars;
-
-	void Initialize(int starAmount) noexcept;
-	void Update(float offset)noexcept;
-	void Render()noexcept;
+	std::vector<Star> stars;
+	Background(int starAmount);	
+	void Render() const noexcept;
 
 };

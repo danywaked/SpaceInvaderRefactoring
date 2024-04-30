@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string_view>
 #include <format>
+#include <unordered_map>
 
 using namespace std::literals::string_view_literals;
 struct Resource 
@@ -17,7 +18,6 @@ struct Resource
 	explicit Resource(std::string_view path) {
 		texture = LoadTexture(path.data());
 		if (texture.id <= 0) {
-			[[gsl::suppress(bounds.1)]]
 			throw std::runtime_error(std::format("Unable to load texture: {}"sv, path));
 		}
 	}
@@ -37,6 +37,8 @@ struct Resource
 
 struct ResourceManager
 {
+	std::unordered_map<std::string_view, Resource*> texturesList;
+
 	std::vector<Resource> shipTextures;
 	Resource alienTexture{ "./Assets/Alien.png"sv };
 	Resource barrierTexture{ "./Assets/Barrier.png"sv };
@@ -48,4 +50,9 @@ struct ResourceManager
 		shipTextures.emplace_back("./Assets/Ship2.png"sv);
 		shipTextures.emplace_back("./Assets/Ship3.png"sv);
 	}
+
+	const Resource& GetTexture(std::string_view text) const {
+		auto it = 
+	}
+
 };
