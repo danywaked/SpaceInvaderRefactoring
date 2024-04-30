@@ -10,9 +10,11 @@
 
 class Wall
 {
+	static constexpr float width = 170.f;
+	static constexpr float height = 76.0f;
 public:
 	Wall(Vector2 position) noexcept;
-	Rectangle rect{};
+	Rectangle rect{0.0f,0.0f,width,height};
 	int health = 50;
 
 	bool isActive() const noexcept {

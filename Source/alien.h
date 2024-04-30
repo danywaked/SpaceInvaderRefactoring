@@ -10,14 +10,14 @@
 class Alien
 {
 	int speed = 2;
-	bool moveRight = true;
-
-public:
-	Alien(Vector2 position) noexcept;	
 	static constexpr float alienWidth = 100.0f;
 	static constexpr float alienHeight = 100.0f;
+public:
+	Alien(Vector2 position) noexcept;	
 	Rectangle rect{0.0f, 0.0f, alienWidth, alienHeight};
 	bool active = true;
+	float GetHeight() const noexcept;
+	Vector2 GetGunPosition() const noexcept;
 	void Update() noexcept;
 	void Render(const Resource& texture) const noexcept;
 	bool isActive() const noexcept { return active; }

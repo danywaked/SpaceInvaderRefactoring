@@ -2,8 +2,7 @@
 #include <iostream>
 
 
-int main(void)
-{    
+int main(void){    
     try {
         Game game;
         game.Run();

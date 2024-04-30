@@ -1,9 +1,8 @@
 #include "game.h"
 #include <cassert>
+#include <algorithm> 
 
-
-void Game::Run()
-{
+void Game::Run(){
 	while (!game.ShouldClose())
 	{
 		Update();
@@ -11,8 +10,7 @@ void Game::Run()
 	}
 }
 
-void Game::Start()
-{
+void Game::Start(){
 	SpawnWalls();
 	SpawnAliens();
 	//background = Background(600);
@@ -21,22 +19,20 @@ void Game::Start()
 	gameState = State::GAMEPLAY;
 }
 
-void Game::End() noexcept
-{
+void Game::End() noexcept{
 	PlayerProjectiles.clear();
 	EnemyProjectiles.clear();
 	Walls.clear();
 	Aliens.clear();
+	newHighScore = CheckNewHighScore();
 	gameState = State::ENDSCREEN;
 }
 
-void Game::Continue()noexcept
-{
+void Game::Continue() noexcept{
 	gameState = State::STARTSCREEN;
 }
 
-void Game::Update()
-{
+void Game::Update(){
 	switch (gameState)
 	{
 	case State::STARTSCREEN:
@@ -56,7 +52,7 @@ void Game::Update()
 		//Update Aliens and Check if they are past player
 		for (auto& a : Aliens) {
 			a.Update(); 
-			if (a.rect.y > GetScreenHeight() - player.playerHeight)
+			if (a.GetHeight() > GetScreenHeight() - player.GetHeight())
 			{
 				return End();
 			}
@@ -100,8 +96,11 @@ void Game::Update()
 		{
 			Continue();
 		}
-
-		
+		if (newHighScore)
+		{
+			InsertNewHighScore("You");
+			newHighScore = false;
+		}
 		break;
 	default:
 		assert("Invalid Game state detected");
@@ -109,8 +108,7 @@ void Game::Update()
 	}
 }
 
-void Game::Render() noexcept
-{
+void Game::Render() noexcept{
 	BeginDrawing();
 	ClearBackground(BLACK);
 	switch (gameState)
@@ -188,8 +186,7 @@ bool Game::CheckForWallCollisions(Projectile& projectile) noexcept
 	return false;
 }
 
-void Game::CheckForAlienCollisions() noexcept
-{
+void Game::CheckForAlienCollisions() noexcept{
 	for (auto& enemyProjectile : EnemyProjectiles) {
 		if (CheckForWallCollisions(enemyProjectile)) {
 			continue;
@@ -202,15 +199,14 @@ void Game::CheckForAlienCollisions() noexcept
 	}
 }
 
-void Game::SpawnPlayerProjectile()
-{
+void Game::SpawnPlayerProjectile(){
 	const float window_height = static_cast<float>(GetScreenHeight());
 	Vector2 pos{ player.GetX() + (player.GetWidth()/2.0f),  window_height - player.GetHeight()};	
 	constexpr int speed = 15;
 	PlayerProjectiles.emplace_back(pos,speed);
 }
 
-const auto& getRandomEntity(const auto& collection) noexcept {
+const auto& GetRandomEntity(const auto& collection) noexcept{
 	assert(!collection.empty());
 	[[gsl::suppress(type.1, "suppressing prefer gsl::narrow_cast")]]
     const auto index = GetRandomValue(0, static_cast<int>(std::size(collection)) - 1);	
@@ -219,30 +215,24 @@ const auto& getRandomEntity(const auto& collection) noexcept {
 	return collection[index];
 }
 
-void Game::AlienShooting()
-{
-	const auto alien  = getRandomEntity(Aliens);
-	//TODO
-	//const auto barrel = alien.getGunPosition();
-
-	Vector2 pos{ alien.rect.x, alien.rect.y};
-	pos.y += 40;
+void Game::AlienShooting(){
+	const auto alien  = GetRandomEntity(Aliens);
+	const auto barrel = alien.GetGunPosition();	
 	constexpr int speed = -15;
-	EnemyProjectiles.push_back(Projectile(pos, speed));
+	EnemyProjectiles.push_back(Projectile(barrel, speed));
 	shootTimer = 0;
 }
 
 constexpr auto isDead = [](const auto& entity)  noexcept -> bool  {return !entity.isActive(); };
 
-void Game::EraseInactiveEntities()noexcept{
+void Game::EraseInactiveEntities() noexcept{
 	std::erase_if(Aliens, isDead);
 	std::erase_if(Walls, isDead);
 	std::erase_if(EnemyProjectiles, isDead);
 	std::erase_if(PlayerProjectiles, isDead);
 }
 
-void Game::SpawnWalls() 
-{
+void Game::SpawnWalls(){
 	const float window_width = GetScreenWidthF();
 	const float window_height = static_cast<float>(GetScreenHeight());
 	const float wall_distance = static_cast<float>(window_width / (wallCount + 1));
@@ -267,29 +257,16 @@ void Game::SpawnAliens()
 	}
 }
 
-bool Game::CheckNewHighScore()noexcept
-{	
+bool Game::CheckNewHighScore() noexcept{	
 	return (score > Leaderboard.back().score);
 }
 
-void Game::InsertNewHighScore(std::string p_name) noexcept
-{
-	PlayerData newData; //TODO dont twostep. add constructor
-	newData.name = p_name;
-	newData.score = score;
-
-	//push new on to leaderboard
-	//sort by score
-	//pop_back()
-
-	for (size_t i = 0; i < Leaderboard.size(); i++)
+void Game::InsertNewHighScore(std::string p_name){
+	Leaderboard.push_back(PlayerData(p_name,score));
+	std::sort(Leaderboard.begin(), Leaderboard.end(), [](const PlayerData& a, const PlayerData& b) {return a.score > b.score; });
+	
+	if (Leaderboard.size() > maxLeaderboardSize)
 	{
-		[[gsl::suppress(bounds.4, "suppressing prefer.at()")]]
-		if (newData.score > Leaderboard[i].score)
-		{
-			Leaderboard.insert(Leaderboard.begin() + i, newData);
-			Leaderboard.pop_back();
-			i = Leaderboard.size();
-		}
+		Leaderboard.pop_back();
 	}
 }

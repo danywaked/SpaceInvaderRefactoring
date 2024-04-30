@@ -16,7 +16,6 @@
 #include <string>
 
 
-
 static float GetScreenWidthF() noexcept {
 	return static_cast<float>(GetScreenWidth());
 }
@@ -30,6 +29,10 @@ enum struct State
 
 struct PlayerData
 {
+	PlayerData(std::string p_name, int p_score) {
+		name = p_name;
+		score = p_score;
+	}
 	std::string name;
 	int score = 0;
 	void render(int pos) const noexcept {
@@ -75,7 +78,7 @@ struct Game
 	void SpawnWalls();
 	void SpawnAliens();
 	bool CheckNewHighScore()noexcept;
-	void InsertNewHighScore(std::string p_name)noexcept;
+	void InsertNewHighScore(std::string p_name);
 
 	Background background = Background(starAmount);
 	ResourceManager resources;
@@ -86,5 +89,5 @@ struct Game
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
-
+	static constexpr int maxLeaderboardSize = 5;
 };

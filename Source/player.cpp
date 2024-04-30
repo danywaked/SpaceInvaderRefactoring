@@ -1,26 +1,20 @@
 #include "player.h"
 
 
-Player::Player(float posX) noexcept
-{
-	rect.width = playerWidth;
-	rect.height = playerHeight;
+Player::Player(float posX) noexcept{
 	rect.x = posX;
 	rect.y = GetScreenHeight() - rect.height;
 }
 
-float Player::GetWidth() const noexcept
-{
+float Player::GetWidth() const noexcept{
 	return rect.width;
 }
 
-float Player::GetHeight() const noexcept
-{
+float Player::GetHeight() const noexcept{
 	return rect.height;
 }
 
-float Player::GetX() const noexcept
-{
+float Player::GetX() const noexcept{
 	return rect.x;
 }
 

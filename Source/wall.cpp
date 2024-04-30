@@ -1,12 +1,9 @@
 #include "wall.h"
 
 
-Wall::Wall(Vector2 position) noexcept
-{
+Wall::Wall(Vector2 position) noexcept{
 	rect.x = position.x;
 	rect.y = position.y;
-	rect.width = 170;
-	rect.height = 76;
 }
 
 void Wall::Render(const Resource& texture) const noexcept {

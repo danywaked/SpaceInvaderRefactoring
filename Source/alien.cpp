@@ -5,35 +5,22 @@ Alien::Alien(Vector2 position) noexcept{
 	rect.y = position.y;
 }
 
+float Alien::GetHeight() const noexcept {
+	return rect.height;
+}
+
+Vector2 Alien::GetGunPosition() const noexcept{
+	return Vector2({ rect.x + (rect.width / 2), rect.y });
+}
+
 void Alien::Update() noexcept {
 	const float window_width = static_cast<float>(GetScreenWidth());
+	rect.x += speed;
 
-	//TODO: 
-	//add speed
-	//isAtWall()
-		//speed *= -1;
-		//position.y += 50;
-
-
-	if (moveRight)
+	if (rect.x >= window_width - rect.width || rect.x <= 0)
 	{
-		rect.x += speed;
-
-		if (rect.x >= window_width - rect.width)
-		{
-			moveRight = false;
-			rect.y += 50;
-		}
-	}
-	else
-	{
-		rect.x -= speed;
-
-		if (rect.x <= 0)
-		{
-			moveRight = true;
-			rect.y += 50;
-		}
+		speed *= -1;
+		rect.y += 50.0f;
 	}
 }
 

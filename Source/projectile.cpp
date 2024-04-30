@@ -1,32 +1,25 @@
 #include "projectile.h"
 
 
-Projectile::Projectile(Vector2 position, int p_speed) noexcept
-{
-	rect.width = 9.0f;
-	rect.height = 47.0f;
+Projectile::Projectile(Vector2 position, int p_speed) noexcept{
 	rect.x = position.x ;
 	rect.y = position.y;
 	speed = p_speed;
 }
 
-float Projectile::GetWidth() const noexcept
-{
+float Projectile::GetWidth() const noexcept{
 	return rect.width;
 }
 
-float Projectile::GetHeight() const noexcept
-{
+float Projectile::GetHeight() const noexcept{
 	return rect.height;
 }
 
-float Projectile::GetX() const noexcept
-{
+float Projectile::GetX() const noexcept{
 	return rect.x;
 }
 
-float Projectile::GetY() const noexcept
-{
+float Projectile::GetY() const noexcept{
 	return rect.y;
 }
 
