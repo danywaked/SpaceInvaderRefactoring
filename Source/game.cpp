@@ -13,7 +13,6 @@ void Game::Run(){
 void Game::Start(){
 	SpawnWalls();
 	SpawnAliens();
-	//background = Background(600);
 	score = 0;
 	player.lives = 3;
 	gameState = State::GAMEPLAY;
@@ -108,7 +107,7 @@ void Game::Update(){
 	}
 }
 
-void Game::Render() noexcept{
+void Game::Render() {
 	BeginDrawing();
 	ClearBackground(BLACK);
 	switch (gameState)
@@ -123,7 +122,7 @@ void Game::Render() noexcept{
 		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 		
-		player.Render(resources.shipTextures[player.activeTexture]); //TODO. give resources the interface you need instead of suppresing the warning
+		player.Render(resources.GetShipTexture(player.activeTexture));
 		for(auto& enemyProjectiles : EnemyProjectiles){
 			enemyProjectiles.Render(resources.laserTexture);
 		}

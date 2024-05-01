@@ -44,15 +44,19 @@ struct ResourceManager
 	Resource barrierTexture{ "./Assets/Barrier.png"sv };
 	Resource laserTexture{ "./Assets/Laser.png"sv };
 
-	[[gsl::suppress(f.6)]]
+	[[gsl::suppress(f.6, "suppressing prefers noexcept")]]
 	ResourceManager() {
 		shipTextures.emplace_back("./Assets/Ship1.png"sv);
 		shipTextures.emplace_back("./Assets/Ship2.png"sv);
 		shipTextures.emplace_back("./Assets/Ship3.png"sv);
 	}
 
-	/*const Resource& GetTexture(std::string_view text) const {
-		auto it = 
-	}*/
-
+	const Resource& GetShipTexture(size_t index) const {
+		if (index >= shipTextures.size())
+		{
+			throw std::runtime_error(std::format("The texture index: {} for Ship Texture is out of range"sv, index));
+		}
+		[[gsl::suppress(bounds.4, "prefers gsl::at()")]]
+		return shipTextures[index];
+	}
 };

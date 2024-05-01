@@ -12,6 +12,7 @@ class Wall
 {
 	static constexpr float width = 170.f;
 	static constexpr float height = 76.0f;
+	static constexpr int textSize = 40;
 public:
 	Wall(Vector2 position) noexcept;
 	Rectangle rect{0.0f,0.0f,width,height};

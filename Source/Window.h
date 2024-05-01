@@ -9,18 +9,16 @@
 constexpr int screenWidth = 1920;
 constexpr int screenHeight = 1080;
 
-struct Window {
-    Window(int width, int height, std::string_view title) noexcept
-    {
+struct Window 
+{
+    Window(int width, int height, std::string_view title) noexcept{
         InitWindow(width, height, title.data());
         SetTargetFPS(60);
     }
-   bool ShouldClose() const noexcept
-   {
+   bool ShouldClose() const noexcept{
        return WindowShouldClose();
    }
-   ~Window() noexcept
-   {
+   ~Window() noexcept{
        CloseWindow();
    }
 
@@ -28,5 +26,4 @@ struct Window {
    Window& operator=(const Window& other) = delete;
    Window(Window&& other) = delete;
    Window & operator=(Window && other) = delete;
-
 };

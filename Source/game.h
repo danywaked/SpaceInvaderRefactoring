@@ -67,7 +67,7 @@ struct Game
 	void End()noexcept;
 	void Continue()noexcept;
 	void Update();
-	void Render()noexcept;
+	void Render();
 
 	void CheckForPlayerCollisions() noexcept;
 	bool CheckForWallCollisions(Projectile& projectile) noexcept;
