@@ -69,12 +69,16 @@ struct Game
 	void Update();
 	void Render();
 
-	void CheckForPlayerCollisions() noexcept;
-	bool CheckForWallCollisions(Projectile& projectile) noexcept;
-	void CheckForAlienCollisions() noexcept;
-	void SpawnPlayerProjectile();
-	void AlienShooting();
+	void UpdateGameplay();
+	void RenderEntities();
+	void CheckGameOverState() noexcept;
 	void EraseInactiveEntities()noexcept;
+
+	bool CheckForWallCollisions(Projectile& projectile) noexcept;
+	void CheckForPlayerCollisions() noexcept;
+	void CheckForAlienCollisions() noexcept;
+	void SpawnPlayerProjectile(); 
+	void AlienShooting();
 	void SpawnWalls();
 	void SpawnAliens();
 	bool CheckNewHighScore()noexcept;

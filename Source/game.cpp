@@ -42,50 +42,13 @@ void Game::Update(){
 
 		break;
 	case State::GAMEPLAY:
-		if (IsKeyReleased(KEY_Q))
-		{
-			return End();
-		}
-		player.Update();
-		
-		//Update Aliens and Check if they are past player
-		for (auto& a : Aliens) {
-			a.Update(); 
-			if (a.GetHeight() > GetScreenHeight() - player.GetHeight())
-			{
-				return End();
-			}
-		}
-		//End game if player dies
-		if (player.lives < 1)
-		{
-			return End();
-		}
-		if (Aliens.size() < 1)
-		{
+
+		CheckGameOverState();
+
+		if (Aliens.empty()) {
 			SpawnAliens();
 		}
-
-		//UPDATE PROJECTILE
-		for (auto& enemyProjectiles : EnemyProjectiles) {
-			enemyProjectiles.Update();
-		}
-		for (auto& playerProjectiles : PlayerProjectiles) {
-			playerProjectiles.Update();
-		}
-		CheckForAlienCollisions();
-		CheckForPlayerCollisions();
-		if (IsKeyPressed(KEY_SPACE))
-		{
-			SpawnPlayerProjectile();
-		}
-
-		//Aliens Shooting
-		shootTimer += 1;
-		if (shootTimer > 59) //once per second
-		{
-			AlienShooting();
-		}
+		UpdateGameplay();
 		EraseInactiveEntities();
 
 		break;
@@ -97,7 +60,7 @@ void Game::Update(){
 		}
 		if (newHighScore)
 		{
-			InsertNewHighScore("You");
+			InsertNewHighScore("New");
 			newHighScore = false;
 		}
 		break;
@@ -107,7 +70,7 @@ void Game::Update(){
 	}
 }
 
-void Game::Render() {
+void Game::Render(){
 	BeginDrawing();
 	ClearBackground(BLACK);
 	switch (gameState)
@@ -121,20 +84,8 @@ void Game::Render() {
 		background.Render();
 		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
+		RenderEntities();
 		
-		player.Render(resources.GetShipTexture(player.activeTexture));
-		for(auto& enemyProjectiles : EnemyProjectiles){
-			enemyProjectiles.Render(resources.laserTexture);
-		}
-		for(auto& playerProjectiles : PlayerProjectiles){
-			playerProjectiles.Render(resources.laserTexture);
-		}
-		for (auto& w : Walls) {
-			w.Render(resources.barrierTexture);
-		}
-		for (auto& a : Aliens) {
-			a.Render(resources.alienTexture);
-		}
 		break;
 
 	case State::ENDSCREEN:
@@ -155,8 +106,52 @@ void Game::Render() {
 	EndDrawing();
 }
 
-void Game::CheckForPlayerCollisions() noexcept
-{
+void Game::UpdateGameplay(){
+	for (auto& a : Aliens) {
+		a.Update();
+	}
+	player.Update();
+
+	for (auto& enemyProjectiles : EnemyProjectiles) {
+		enemyProjectiles.Update();
+	}
+	for (auto& playerProjectiles : PlayerProjectiles) {
+		playerProjectiles.Update();
+	}
+	if (IsKeyPressed(KEY_SPACE)) {
+		SpawnPlayerProjectile();
+	}
+	AlienShooting();
+	CheckForPlayerCollisions();
+	CheckForAlienCollisions();
+}
+
+void Game::RenderEntities(){
+	player.Render(resources.GetShipTexture(player.activeTexture));
+	for (auto& enemyProjectiles : EnemyProjectiles) {
+		enemyProjectiles.Render(resources.laserTexture);
+	}
+	for (auto& playerProjectiles : PlayerProjectiles) {
+		playerProjectiles.Render(resources.laserTexture);
+	}
+	for (auto& w : Walls) {
+		w.Render(resources.barrierTexture);
+	}
+	for (auto& a : Aliens) {
+		a.Render(resources.alienTexture);
+	}
+}
+
+void Game::CheckGameOverState() noexcept{
+	for (auto& a : Aliens) {
+		if (IsKeyReleased(KEY_Q) || player.lives < 1 || a.GetHeight() > GetScreenHeight() - player.GetHeight())
+		{
+			return End();
+		}
+	}
+}
+
+void Game::CheckForPlayerCollisions() noexcept{
 	for (auto& playerProjectile : PlayerProjectiles) {
 		if (CheckForWallCollisions(playerProjectile)) {
 			continue;
@@ -172,8 +167,7 @@ void Game::CheckForPlayerCollisions() noexcept
 	}
 }
 
-bool Game::CheckForWallCollisions(Projectile& projectile) noexcept
-{
+bool Game::CheckForWallCollisions(Projectile& projectile) noexcept{
 	for (auto& w : Walls) {
 		if (CheckCollisionRecs(w.rect, projectile.rect))
 		{
@@ -215,11 +209,15 @@ const auto& GetRandomEntity(const auto& collection) noexcept{
 }
 
 void Game::AlienShooting(){
-	const auto alien  = GetRandomEntity(Aliens);
-	const auto barrel = alien.GetGunPosition();	
-	constexpr int speed = -15;
-	EnemyProjectiles.push_back(Projectile(barrel, speed));
-	shootTimer = 0;
+	shootTimer += 1;
+	if (shootTimer > 59)
+	{
+		const auto alien = GetRandomEntity(Aliens);
+		const auto barrel = alien.GetGunPosition();
+		constexpr int speed = -15;
+		EnemyProjectiles.push_back(Projectile(barrel, speed));
+		shootTimer = 0;
+	}
 }
 
 constexpr auto isDead = [](const auto& entity)  noexcept -> bool  {return !entity.isActive(); };
@@ -243,8 +241,7 @@ void Game::SpawnWalls(){
 	}
 }
 
-void Game::SpawnAliens()
-{
+void Game::SpawnAliens(){
 	Aliens.reserve(formationHeight * formationWidth);
 	for (int row = 0; row < formationHeight; row++) {
 		for (int col = 0; col < formationWidth; col++) {

@@ -45,13 +45,14 @@ void Player::Movement() noexcept{
 	{
 		rect.x += speed;
 	}
-	if (rect.x < 0 + rect.width)
+	const float window_width = static_cast<float>(GetScreenWidth());
+	if (rect.x <= 0.0f )
 	{
-		rect.x = rect.width;
+		rect.x = 0.0f;
 	}
-	else if (rect.x > GetScreenWidth() - rect.width)
+	else if (rect.x > window_width - rect.width)
 	{
-		rect.x = GetScreenWidth() - rect.width;
+		rect.x = window_width - rect.width;
 	}
 }
 
