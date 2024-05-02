@@ -46,7 +46,7 @@ void Player::Movement() noexcept{
 void Player::Animation() noexcept{
 	timer += GetFrameTime();
 
-	if (timer > 0.4 && activeTexture == 2){
+	if (timer > timerMax && activeTexture == 2){
 		activeTexture = 0;
 		timer = 0;
 	}

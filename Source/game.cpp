@@ -36,10 +36,8 @@ void Game::Update(){
 		if (IsKeyReleased(KEY_SPACE)){
 			Start();
 		}
-
 		break;
 	case State::GAMEPLAY:
-
 		CheckGameOverState();
 
 		if (Aliens.empty()) {
@@ -47,16 +45,13 @@ void Game::Update(){
 		}
 		UpdateGameplay();
 		EraseInactiveEntities();
-
 		break;
 	case State::ENDSCREEN:
 	
-		if (IsKeyReleased(KEY_ENTER) && !newHighScore)
-		{
+		if (IsKeyReleased(KEY_ENTER) && !newHighScore) {
 			Continue();
 		}
-		if (newHighScore)
-		{
+		if (newHighScore){
 			InsertNewHighScore("New");
 			newHighScore = false;
 		}
@@ -70,8 +65,7 @@ void Game::Update(){
 void Game::Render(){
 	BeginDrawing();
 	ClearBackground(BLACK);
-	switch (gameState)
-	{
+	switch (gameState) {
 	case State::STARTSCREEN:
 		DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
 		DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
@@ -82,7 +76,6 @@ void Game::Render(){
 		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 		RenderEntities();
-		
 		break;
 
 	case State::ENDSCREEN:

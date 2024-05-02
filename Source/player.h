@@ -10,6 +10,7 @@ class Player
 {
 	float speed = 7;
 	float timer = 0;
+	static constexpr float timerMax = 0.4f;
 	static constexpr float playerWidth = 100.0f;
 	static constexpr float playerHeight = 100.0f;
 	void Movement() noexcept;
