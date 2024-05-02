@@ -71,6 +71,7 @@ struct Game
 	void Render();
 
 	void UpdateGameplay();
+	void RenderEntities();
 	void CheckGameOverState() noexcept;
 	void EraseInactiveEntities()noexcept;
 

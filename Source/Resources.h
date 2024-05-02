@@ -51,7 +51,7 @@ struct ResourceManager
 		shipTextures.emplace_back("./Assets/Ship3.png"sv);
 	}
 
-	const Resource& GetShipTexture(size_t index) const {
+	const Resource& GetShipTexture(int index) const {
 		if (index >= shipTextures.size())
 		{
 			throw std::runtime_error(std::format("The texture index: {} for Ship Texture is out of range"sv, index));
