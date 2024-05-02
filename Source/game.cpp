@@ -255,7 +255,7 @@ void Game::InsertNewHighScore(std::string p_name){
 	Leaderboard.push_back(PlayerData(p_name,score));
 	std::sort(Leaderboard.begin(), Leaderboard.end(), [](const PlayerData& a, const PlayerData& b) {return a.score > b.score; });
 	
-	if (Leaderboard.size() > maxLeaderboardSize && !Leaderboard.empty()) {
+	if (Leaderboard.size() > maxLeaderboardSize) {
 		Leaderboard.pop_back();
 	}
 }
