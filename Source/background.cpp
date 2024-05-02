@@ -15,9 +15,8 @@ void Star::Render() const noexcept{
 
 Background::Background(int starAmount) {
 	stars.reserve(starAmount);
-	for (int i = 0; i < starAmount; i++)
-	{
-		float x = (GetRandomFloat(-150, GetScreenWidth() + 150));
+	for (int i = 0; i < starAmount; i++) {
+		float x = (GetRandomFloat(0, GetScreenWidth()));
 		float y = (GetRandomFloat(0, GetScreenHeight()));
 		stars.emplace_back(x, y);
 	}

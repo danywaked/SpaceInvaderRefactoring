@@ -13,6 +13,7 @@ class Player
 	static constexpr float playerWidth = 100.0f;
 	static constexpr float playerHeight = 100.0f;
 	void Movement() noexcept;
+	void Animation() noexcept;
 public:
 	Player(float posX) noexcept;
 	float GetWidth() const noexcept;

@@ -6,9 +6,6 @@
 #pragma warning(pop)
 #include <string_view>
 
-constexpr int screenWidth = 1920;
-constexpr int screenHeight = 1080;
-
 struct Window 
 {
     Window(int width, int height, std::string_view title) noexcept{

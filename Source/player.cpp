@@ -20,20 +20,7 @@ float Player::GetX() const noexcept{
 
 void Player::Update() noexcept{
 	Movement();
-
-	//Determine frame for animation
-	timer += GetFrameTime();
-
-	if (timer > 0.4 && activeTexture == 2)
-	{
-		activeTexture = 0;
-		timer = 0;
-	}
-	else if (timer > 0.4)
-	{
-		activeTexture++;
-		timer = 0;
-	}
+	Animation();
 }
 
 void Player::Movement() noexcept{
@@ -45,17 +32,29 @@ void Player::Movement() noexcept{
 	{
 		rect.x += speed;
 	}
-	const float window_width = static_cast<float>(GetScreenWidth());
+	const float windowWidth = static_cast<float>(GetScreenWidth());
 	if (rect.x <= 0.0f )
 	{
 		rect.x = 0.0f;
 	}
-	else if (rect.x > window_width - rect.width)
+	else if (rect.x > windowWidth - rect.width)
 	{
-		rect.x = window_width - rect.width;
+		rect.x = windowWidth - rect.width;
 	}
 }
 
+void Player::Animation() noexcept{
+	timer += GetFrameTime();
+
+	if (timer > 0.4 && activeTexture == 2){
+		activeTexture = 0;
+		timer = 0;
+	}
+	else if (timer > 0.4){
+		activeTexture++;
+		timer = 0;
+	}
+}
 
 void Player::Render(const Resource& texture) const noexcept{
 	DrawTextureV(texture.texture, { rect.x ,rect.y }, WHITE);

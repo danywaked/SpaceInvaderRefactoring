@@ -13,14 +13,18 @@ Vector2 Alien::GetGunPosition() const noexcept{
 	return Vector2({ rect.x + (rect.width / 2.0f), rect.y });
 }
 
+float Alien::GetY() const noexcept
+{
+	return rect.y;
+}
+
 void Alien::Update() noexcept {
-	const float window_width = static_cast<float>(GetScreenWidth());
+	const float windowWidth = static_cast<float>(GetScreenWidth());
 	rect.x += speed;
 
-	if (rect.x >= window_width - rect.width || rect.x <= 0.0f)
-	{
+	if (rect.x >= windowWidth - rect.width || rect.x <= 0.0f){
 		speed *= -1;
-		rect.y += 50.0f;
+		rect.y += heightChange;
 	}
 }
 
